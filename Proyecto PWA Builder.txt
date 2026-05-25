@@ -1,0 +1,215 @@
+📌 Instrucción General
+
+Quiero que generes un proyecto completo en React + Vite + TailwindCSS, que funcionará como un PWA Builder web que permita crear aplicaciones móviles para radios online sin escribir código.
+
+El software debe generar PWAs listas para instalar y también exportar archivos para compilarlas como APK de Android.
+
+Genera todos los archivos, carpetas, componentes, estilos, hooks, lógica y funcionalidades completas.
+Debes escribir todo el código automáticamente.
+
+📁 ESTRUCTURA DEL PROYECTO
+
+Crea exactamente esta estructura de carpetas y archivos:
+
+pwa-builder/
+│── index.html
+│── vite.config.js
+│── package.json
+│── tailwind.config.js
+│── postcss.config.js
+│── manifest.json
+│── sw.js
+│
+└── src/
+    │── main.jsx
+    │── App.jsx
+    │── styles.css
+    │
+    ├── components/
+    │   ├── Header.jsx
+    │   ├── Footer.jsx
+    │   ├── RadioForm.jsx
+    │   ├── ThemeSelector.jsx
+    │   ├── AppPreview.jsx
+    │   ├── ExportPanel.jsx
+    │   └── ReadyPWA.jsx
+    │
+    ├── lib/
+    │   ├── generator.js
+    │   └── zipExport.js
+    │
+    └── assets/
+        └── default-logo.png
+
+🎨 REQUISITOS DE LA INTERFAZ GRÁFICA
+
+La interfaz debe ser moderna, profesional y limpia, estilo dashboard.
+
+Características:
+
+✔ UI con tarjetas, bordes redondeados y sombras suaves
+✔ Paleta clara tipo neumorfismo suave o tailwind moderno
+✔ Animaciones sutiles
+✔ Previsualización en tiempo real de la app
+✔ Controles fáciles tipo “constructor visual” (builder)
+
+🧩 FUNCIONALIDADES OBLIGATORIAS
+1. Formulario del Constructor de la App
+
+El usuario debe poder modificar:
+
+Nombre de la emisora
+
+Logo (subida de imagen)
+
+URL del streaming de audio
+
+Colores principales y secundarios
+
+Color del reproductor
+
+Icono de la aplicación
+
+Tema claro/oscuro
+
+El componente debe llamarse RadioForm.jsx.
+
+2. Selector de Tema
+
+Componente ThemeSelector.jsx con:
+
+Paleta de colores listos (azul, rojo, morado, verde, naranja)
+
+Selector RGB/HEX personalizado
+
+Vista previa instantánea
+
+3. Reproductor de Audio
+
+En AppPreview.jsx se debe mostrar:
+
+Reproductor moderno
+
+Título y logo
+
+Estado: cargando → reproduciendo → detenido
+
+Control de volumen
+
+Compatible con streaming MP3, AAC, OGG
+
+4. Generación Automática de la PWA
+
+El sistema debe generar:
+
+manifest.json
+
+sw.js (service worker)
+
+Íconos (mínimo 192x192 y 512x512)
+
+Carpeta /pwa-export/<nombre-app>/
+
+Esto se hace en generator.js.
+
+5. Exportación como ZIP
+
+Crear utilidades en:
+
+zipExport.js
+
+Debe:
+
+Crear un ZIP con todos los archivos generados
+
+Incluir manifest, service worker, index.html y assets
+
+Descargar automáticamente el ZIP en el navegador
+
+6. Panel de Exportación
+
+Componente ExportPanel.jsx con:
+
+Botón “Generar PWA”
+
+Botón “Descargar ZIP”
+
+Instrucciones para convertir el PWA a APK usando Bubblewrap
+
+7. Vista "PWA lista"
+
+Componente ReadyPWA.jsx que muestre:
+
+Resumen de la app creada
+
+Botón para descargar ZIP
+
+QR para instalar PWA directamente
+
+⚙️ REQUISITOS TÉCNICOS DEL PROYECTO
+1. Inicializar Vite + React
+
+Usar: npm create vite@latest pwa-builder --template react
+
+2. Instalar TailwindCSS
+
+Configurar:npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+📦 CONFIGURACIÓN DEL MANIFEST
+
+El manifest debe generarse dinámicamente con el nombre, colores e íconos que el usuario defina.
+
+🔧 SERVICE WORKER
+
+Debe incluir:
+
+Caché de recursos
+
+Workbox opcional
+
+Soporte para offline básico
+
+Instalación PWA
+
+🧠 LÓGICA DEL GENERADOR
+
+En generator.js:
+
+Recibir datos del formulario
+
+Crear archivos base (index.html, manifest, sw)
+
+Copiar assets temporales
+
+Generar estructura de app final
+
+Pasar archivos a zipExport.js
+
+🎯 OBJETIVO FINAL
+
+La IA debe generar el proyecto completo, totalmente funcional, con:
+
+Constructor visual (builder)
+
+Previsualización en tiempo real
+
+Exportación automática de PWA
+
+Interfaz moderna tipo SaaS profesional
+
+Código limpio, comentado y escalable
+
+📝 INDICACIÓN FINAL
+
+Genera todos los archivos completos, con código, componentes, estilos, funciones e implementación detallada.
+Una vez generados, asegúrate de que el proyecto pueda ejecutarse con:
+
+npm install
+npm run dev
+
+
+
+
+
+

@@ -1,0 +1,238 @@
+import React, { useState, useRef, useEffect } from 'react'
+
+function AppPreview({ config }) {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [volume, setVolume] = useState(0.7)
+  const [error, setError] = useState(null)
+  const audioRef = useRef(null)
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume
+    }
+  }, [volume])
+
+  const handlePlayPause = async () => {
+    if (!config.streamUrl) {
+      setError('Por favor, ingresa una URL de streaming')
+      return
+    }
+
+    try {
+      setError(null)
+      if (isPlaying) {
+        audioRef.current.pause()
+        setIsPlaying(false)
+      } else {
+        setIsLoading(true)
+        await audioRef.current.play()
+        setIsPlaying(true)
+        setIsLoading(false)
+      }
+    } catch (err) {
+      setError('Error al reproducir el stream')
+      setIsLoading(false)
+      console.error(err)
+    }
+  }
+
+  const handleVolumeChange = (e) => {
+    const newVolume = parseFloat(e.target.value)
+    setVolume(newVolume)
+  }
+
+  // Calcular colores basados en transparentMode
+  const bgColor = config.transparentMode ? 'rgba(30, 41, 59, 0.3)' : (config.theme === 'dark' ? '#1e293b' : '#ffffff')
+  const textColorFinal = config.textColor || (config.theme === 'dark' ? '#ffffff' : '#1e293b')
+  const headerBg = config.transparentMode ? 'rgba(102, 126, 234, 0.3)' : config.headerColor
+  const footerBg = config.transparentMode ? 'rgba(118, 75, 162, 0.3)' : config.footerColor
+
+  // Debug: Log de configuración
+  console.log('AppPreview Config:', {
+    transparentMode: config.transparentMode,
+    headerColor: config.headerColor,
+    footerColor: config.footerColor,
+    textColor: config.textColor,
+    overlayColor: config.overlayColor,
+    overlayOpacity: config.overlayOpacity
+  })
+
+  return (
+    <div className="card">
+      <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
+        <span className="text-3xl mr-3">📱</span>
+        Vista Previa de la App
+      </h2>
+
+      {/* Simulación de dispositivo móvil */}
+      <div className="relative mx-auto max-w-sm">
+        {/* Marco del dispositivo - Diseño moderno */}
+        <div className="relative rounded-[2.5rem] border-[8px] border-gray-700 shadow-2xl overflow-hidden bg-gradient-to-br from-gray-900 to-black ring-2 ring-primary-500/30 ring-offset-2 ring-offset-gray-800">
+          {/* Notch moderno más delgado */}
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-5 bg-black rounded-b-2xl z-10 flex items-center justify-center">
+            <div className="w-14 h-1 bg-gray-800 rounded-full mt-1"></div>
+            <div className="absolute right-2 top-1.5 w-2 h-2 bg-green-500 rounded-full"></div>
+          </div>
+          
+          {/* Pantalla */}
+          <div 
+            className="relative aspect-[9/19.5] overflow-y-auto"
+            style={{ 
+              backgroundColor: bgColor,
+              color: textColorFinal
+            }}
+          >
+            {/* Overlay si está configurado */}
+            {config.overlayOpacity > 0 && (
+              <div 
+                className="absolute inset-0 pointer-events-none z-[1]"
+              {config.logo ? (
+                <img 
+                  src={config.logo} 
+                  alt={config.name}
+                  className="w-32 h-32 mx-auto rounded-2xl shadow-lg mb-4 object-cover"
+                />
+              ) : (
+                <div className="w-32 h-32 mx-auto bg-white bg-opacity-20 rounded-2xl shadow-lg mb-4 flex items-center justify-center">
+                  <span className="text-6xl">🎙️</span>
+                </div>
+              )}
+              <h1 className="text-2xl font-bold mb-2" style={{ color: textColorFinal }}>
+                {config.name || 'Mi Radio Online'}
+              </h1>
+              <p className="text-opacity-90 text-sm" style={{ color: textColorFinal }}>
+                Tu radio favorita siempre contigo
+              </p>
+            </div>
+
+            {/* Reproductor */}
+            <div className="p-6 relative z-[2]">
+                <div className="w-32 h-32 mx-auto bg-white bg-opacity-20 rounded-2xl shadow-lg mb-4 flex items-center justify-center">
+                  <span className="text-6xl">🎙️</span>
+                </div>
+              )}
+              <h1 className="text-2xl font-bold text-white mb-2">
+                {config.name || 'Mi Radio Online'}
+              </h1>
+              <p className="text-white text-opacity-90 text-sm">
+                Tu radio favorita siempre contigo
+              </p>
+            </div>
+
+            {/* Reproductor */}
+            <div className="p-6">
+              <div 
+                className="rounded-2xl p-6 shadow-xl"
+                style={{ backgroundColor: footerBg }}
+              >
+                {/* Estado del reproductor */}
+                <div className="text-center mb-6">
+                  {isLoading ? (
+                    <div className="flex flex-col items-center">
+                      <div className="spinner mb-3"></div>
+                      <p className="text-sm" style={{ color: textColorFinal }}>Cargando...</p>
+                    </div>
+                  ) : isPlaying ? (
+                    <div className="flex flex-col items-center">
+                      <div className="relative mb-3">
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-400 to-blue-500 animate-pulse"></div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-2xl">🎵</span>
+                        </div>
+                      </div>
+                      <p className="font-semibold" style={{ color: textColorFinal }}>Reproduciendo en vivo</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 rounded-full bg-gray-600 mb-3 flex items-center justify-center">
+                        <span className="text-2xl">▶️</span>
+                      </div>
+                      <p className="text-gray-400 text-sm" style={{ color: textColorFinal }}>Presiona play para escuchar</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Error message */}
+                {error && (
+                  <div className="mb-4 p-3 bg-red-500 bg-opacity-20 rounded-lg">
+                    <p className="text-red-300 text-sm text-center">{error}</p>
+                  </div>
+                )}
+
+                {/* Controles */}
+                <div className="flex justify-center items-center mb-6">
+                  <button
+                    onClick={handlePlayPause}
+                    disabled={isLoading}
+                    className="w-20 h-20 rounded-full shadow-xl flex items-center justify-center 
+                               transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+                    style={{ backgroundColor: config.headerColor }}
+                  >
+                    {isLoading ? (
+                      <div className="spinner border-white"></div>
+                    ) : isPlaying ? (
+                      <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                      </svg>
+                    ) : (
+                      <svg className="w-10 h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+
+                {/* Control de volumen */}
+                <div className="flex items-center space-x-3">
+                  <span className="text-xl" style={{ color: textColorFinal }}>🔈</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={volume}
+                    onChange={handleVolumeChange}
+                    className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, ${config.headerColor} 0%, ${config.headerColor} ${volume * 100}%, #4b5563 ${volume * 100}%, #4b5563 100%)`
+                    }}
+                  />
+                  <span className="text-xl" style={{ color: textColorFinal }}>🔊</span>
+                </div>
+              </div>
+
+              {/* Información adicional */}
+              <div className="mt-6 text-center">
+                <p className="text-sm" style={{ color: textColorFinal, opacity: 0.7 }}>
+                  Transmisión en vivo · 24/7
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Audio element (oculto) */}
+        <audio
+          ref={audioRef}
+          src={config.streamUrl}
+          preload="none"
+          onError={() => {
+            setError('No se pudo cargar el stream')
+            setIsLoading(false)
+            setIsPlaying(false)
+          }}
+        />
+      </div>
+
+      {/* Indicador de configuración */}
+      <div className="mt-6 p-4 bg-blue-900/20 rounded-lg border border-blue-500/30">
+        <p className="text-sm text-blue-300 text-center">
+          ℹ️ Esta es una vista previa en tiempo real de tu app
+        </p>
+      </div>
+    </div>
+  )
+}
+
+export default AppPreview
